@@ -1,18 +1,13 @@
-# from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from app1 import app
 from datetime import datetime
-# from flask_migrate import Migrate
-from run import db
+from flask_migrate import Migrate
 
-# app= Flask(__name__)
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://test:test@localhost:5432/postgres"
+db = SQLAlchemy(app)
+# # 绑定app和数据库
+migrate = Migrate(app,db)
 
-# db = SQLAlchemy(app)
-# # # 绑定app和数据库
-# migrate = Migrate(app,db)
-
-# db.init_app(app)
+db.init_app(app)
 # 模型( model )定義
 class Order(db.Model):
     __tablename__='order1'

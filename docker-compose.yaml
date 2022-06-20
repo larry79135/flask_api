@@ -1,14 +1,18 @@
 version: '3.8'
 services:
-  # flask-container:
-  #   build: ./flask
-  #   container_name: flask-container
-  #   restart: always
-  #   environment:
-  #     - APP_NAME=MyFlaskApp
-  #   ports:
-  #     - 8080:8080
-
+  flask-container:
+    build: ./flask
+    container_name: flask-container
+    networks:
+      postgresql-container:
+        ipv4_address: 127.0.0.1
+    restart: always
+    environment:
+      - APP_NAME=MyFlaskApp
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgresql-container
   postgresql-container:
     image: postgres:14
     container_name: postgresql-container

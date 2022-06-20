@@ -1,8 +1,8 @@
 FROM python:3.8.3
 
-WORKDIR /app
+WORKDIR /app1
 
-ADD . /app
+ADD . /app1
 
 RUN pip install -r requirements.txt
 RUN pip install uwsgi
