@@ -1,18 +1,118 @@
 version: '3.8'
 services:
-  flask-container:
-    build: ./flask
-    container_name: flask-container
+  nginx-container:
+    build: ./nginx
+    container_name: nginx-container
+    restart: always
+    external_links:
+      - flask-container1
+      - flask-container2
+      - flask-container3
+      - flask-container4
+      - flask-container5
+    ports:
+      - "80:80"
+    depends_on:
+      - flask-container1
+      - flask-container2
+      - flask-container3
+      - flask-container4
+      - flask-container5
     networks:
-      postgresql-container:
-        ipv4_address: 127.0.0.1
+      - container-network
+  flask-container1:
+    build: ./flask
+    container_name: flask-container1
     restart: always
     environment:
+      - SERVER_NUM=1
       - APP_NAME=MyFlaskApp
-    ports:
-      - 8080:8080
+      - DEBUG=True
+      - CORS_HEADERS=Content-Type
+      - SQLALCHEMY_TRACK_MODIFICATIONS=True
+      - SQLALCHEMY_DATABASE_URI=postgresql://test:test@postgresql-container:5432/postgres
+    # ports:
+    #   - 8080:8080
+    expose:
+      - "80"
     depends_on:
       - postgresql-container
+    networks:
+      - container-network
+  flask-container2:
+    build: ./flask
+    container_name: flask-container2
+    restart: always
+    environment:
+      - SERVER_NUM=2
+      - APP_NAME=MyFlaskApp
+      - DEBUG=True
+      - CORS_HEADERS=Content-Type
+      - SQLALCHEMY_TRACK_MODIFICATIONS=True
+      - SQLALCHEMY_DATABASE_URI=postgresql://test:test@postgresql-container:5432/postgres
+    # ports:
+    #   - 8080:8080
+    expose:
+      - "80"
+    depends_on:
+      - postgresql-container
+    networks:
+      - container-network
+  flask-container3:
+    build: ./flask
+    container_name: flask-container3
+    restart: always
+    environment:
+      - SERVER_NUM=3
+      - APP_NAME=MyFlaskApp
+      - DEBUG=True
+      - CORS_HEADERS=Content-Type
+      - SQLALCHEMY_TRACK_MODIFICATIONS=True
+      - SQLALCHEMY_DATABASE_URI=postgresql://test:test@postgresql-container:5432/postgres
+    expose:
+      - "80"
+    depends_on:
+      - postgresql-container
+    networks:
+      - container-network
+  flask-container4:
+    build: ./flask
+    container_name: flask-container4
+    restart: always
+    environment:
+      - SERVER_NUM=4
+      - APP_NAME=MyFlaskApp
+      - DEBUG=True
+      - CORS_HEADERS=Content-Type
+      - SQLALCHEMY_TRACK_MODIFICATIONS=True
+      - SQLALCHEMY_DATABASE_URI=postgresql://test:test@postgresql-container:5432/postgres
+    # ports:
+    #   - 8080:8080
+    expose:
+      - "80"
+    depends_on:
+      - postgresql-container
+    networks:
+      - container-network
+  flask-container5:
+    build: ./flask
+    container_name: flask-container5
+    restart: always
+    environment:
+      - SERVER_NUM=5
+      - APP_NAME=MyFlaskApp
+      - DEBUG=True
+      - CORS_HEADERS=Content-Type
+      - SQLALCHEMY_TRACK_MODIFICATIONS=True
+      - SQLALCHEMY_DATABASE_URI=postgresql://test:test@postgresql-container:5432/postgres
+    # ports:
+    #   - 8080:8080
+    expose:
+      - "80"
+    depends_on:
+      - postgresql-container
+    networks:
+      - container-network
   postgresql-container:
     image: postgres:14
     container_name: postgresql-container
@@ -21,10 +121,12 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=test
-    ports:
-      - '5432:5432'
-    # volumes:
-    #   - postgresql_vol: /var/lib/postgresql/data
+    expose:
+      - "5432"
+    # ports:
+    #   - '5432:5432'
+    networks:
+      - container-network
 
-# volumes:
-#   postgresql_vol: /var/lib/postgresql/data
+networks:
+  container-network:

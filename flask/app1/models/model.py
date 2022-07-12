@@ -29,7 +29,7 @@ class Order(db.Model):
         self.price=price
         self.purchaes_time=purchaes_time
 
-# db.create_all()
+db.create_all()
 
 # if __name__=="__main__":
 #     # app = Flask(__name__)

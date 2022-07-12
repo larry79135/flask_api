@@ -1,12 +1,26 @@
 from flask import Blueprint,request
 from datetime import datetime
 from app1.models.model import Order,db
+import os
+
 api_page = Blueprint('Api', __name__)
 
 
 @api_page.route('/1', methods=['GET'])
 def getAdsData():
-    return "welcome to test"
+    server_num = os.getenv("SERVER_NUM")
+    return f"welcome to Server: {str(server_num)}"
+
+@api_page.route('/create_db', methods=['GET'])
+def create_db():
+    try:
+        db.create_all()
+        result =f"DB created"
+        return result, 200
+    except Exception as e:
+        result = f"Something went wrong: {e}"
+        return result, 500
+
 
 @api_page.route('/order/add', methods=['POST'])
 def addOrder():
